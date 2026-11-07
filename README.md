@@ -38,3 +38,18 @@ Accounts are stored encrypted at:
 | macOS   | `~/Library/Application Support/my-auth/`      |
 | Linux   | `~/.config/my-auth/`                          |
 | Windows | `%AppData%\my-auth\`                          |
+
+## Release Notes
+
+### v1.0.0
+
+Initial release.
+
+- Import accounts from encrypted CSV files with password-based decryption
+- List stored accounts
+- Generate TOTP codes with countdown timer
+- Substring matching for account lookup
+- Copy codes to clipboard with `-c` flag
+- Add new accounts manually with base32 secret input
+- Encrypted local storage (AES-256-GCM with Argon2 key derivation)
+- Cross-platform builds: macOS (arm64/amd64), Linux (amd64), Windows (amd64)
