@@ -25,8 +25,9 @@ You will be prompted for the encryption password. After import, no password is n
 ## Build
 
 ```
-make build          # Build for current platform
-make all            # Build for all platforms (macOS arm64/amd64, Linux amd64, Windows amd64)
+make build          # Build CLI for current platform
+make tray           # Build menu bar app (macOS only)
+make all            # Build all variants for all platforms
 ```
 
 ## Storage
@@ -40,6 +41,13 @@ Accounts are stored encrypted at:
 | Windows | `%AppData%\my-auth\`                          |
 
 ## Release Notes
+
+### v1.1.0
+
+- macOS menu bar app: click the lock icon to see accounts, click an account to copy its TOTP code to clipboard
+- Automatically waits for a fresh code if the current one expires in ≤4 seconds
+- Native macOS notifications on code copy
+- Build with `make tray` (uses build tags to keep CLI builds unaffected)
 
 ### v1.0.0
 

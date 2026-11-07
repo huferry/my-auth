@@ -1,4 +1,4 @@
-# Description of what this command should do
+# Release the current code
 
 ## Steps
 1. Ask user how to update the version, minor or patch
