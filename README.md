@@ -42,6 +42,10 @@ Accounts are stored encrypted at:
 
 ## Release Notes
 
+### v1.1.1
+
+- Tray menu now sorts accounts by usage frequency (most used on top)
+
 ### v1.1.0
 
 - macOS menu bar app: click the lock icon to see accounts, click an account to copy its TOTP code to clipboard

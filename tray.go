@@ -4,8 +4,12 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
+	"sort"
 	"time"
 
 	"github.com/atotto/clipboard"
@@ -30,12 +34,18 @@ func buildMenu() {
 		item := systray.AddMenuItem("No accounts found", "")
 		item.Disable()
 	} else {
+		usage := loadUsage()
+		sort.SliceStable(accounts, func(i, j int) bool {
+			return usage[accounts[i].Name] > usage[accounts[j].Name]
+		})
 		for _, acct := range accounts {
 			item := systray.AddMenuItem(acct.Name, "Click to copy TOTP code")
 			secret := acct.Secret
+			name := acct.Name
 			go func() {
 				for range item.ClickedCh {
 					copyCode(secret)
+					incrementUsage(name)
 				}
 			}()
 		}
@@ -82,6 +92,44 @@ func copyCode(secretB64 string) {
 
 	remaining = 30 - (time.Now().Unix() % 30)
 	showNotification(fmt.Sprintf("Copied: %s (%ds remaining)", code, remaining))
+}
+
+func usagePath() string {
+	d, err := configDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(d, "usage.json")
+}
+
+func loadUsage() map[string]int {
+	p := usagePath()
+	if p == "" {
+		return nil
+	}
+	data, err := os.ReadFile(p)
+	if err != nil {
+		return make(map[string]int)
+	}
+	var usage map[string]int
+	if err := json.Unmarshal(data, &usage); err != nil {
+		return make(map[string]int)
+	}
+	return usage
+}
+
+func incrementUsage(name string) {
+	p := usagePath()
+	if p == "" {
+		return
+	}
+	usage := loadUsage()
+	usage[name]++
+	data, err := json.Marshal(usage)
+	if err != nil {
+		return
+	}
+	os.WriteFile(p, data, 0600)
 }
 
 func showNotification(message string) {
